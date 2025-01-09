@@ -25,7 +25,7 @@ int main(){
 
 
 // main final
-int main(int argc, char *argv[]) {
+/*int main(int argc, char *argv[]) {
     if (argc < 2) {
         printf("Uso: %s <caminho-do-arquivo-mapa> <caminho-do-arquivo-resultado>\n", argv[0]);
         return 1;
@@ -46,4 +46,4 @@ int main(int argc, char *argv[]) {
     fclose(arquivo);
 
     return 0;
-}
+}*/

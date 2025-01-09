@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "Labirinto.h"
 
-#define TAM_BUFFER 1024
+#define TAM_BUFFER 32
 
 void get_infos(FILE* arquivo, int* linhas, int* colunas, int* pts_vida) {
     fscanf(arquivo, "%d %d %d", linhas, colunas, pts_vida);
@@ -21,22 +21,22 @@ labirinto Alocar_Labirinto(int linhas, int colunas) {
 void ler_arquivo(FILE* arquivo, labirinto tabuleiro, int max_linhas, int max_colunas) {
 
     char buffer[TAM_BUFFER];
-    char matriz[max_linhas+1][max_colunas][TAM_BUFFER];
+    char matriz[max_linhas][max_colunas][TAM_BUFFER];
     int linhas = 0, colunas = 0;
 
     // Ler as linhas do arquivo
-    while (fgets(buffer, TAM_BUFFER, arquivo) != NULL && linhas < max_linhas) {
+    while (fgets(buffer, TAM_BUFFER, arquivo) != NULL && linhas <= max_linhas ) {
         // Ignorar a primeira linha
-        if (linhas == 0) {
-            linhas++;
-            continue;
-        }
+        //if (linhas == 0) {
+        //    linhas++;
+        //    continue;
+        //}
 
         colunas = 0;
         char *token = strtok(buffer, " \n");
 
         while (token != NULL && colunas < max_colunas) {
-            strcpy(matriz[linhas - 1][colunas++], token); // Armazena o token como string
+            strcpy(matriz[linhas-1][colunas++], token); // Armazena o token como string
             token = strtok(NULL, " \n");
         }
 
@@ -45,7 +45,7 @@ void ler_arquivo(FILE* arquivo, labirinto tabuleiro, int max_linhas, int max_col
 
     // Exibir a matriz lida
     printf("Matriz lida (sem a primeira linha):\n");
-    for (int i = 0; i < linhas - 1; i++) {
+    for (int i = 0; i < linhas - 1 ; i++) {
         for (int j = 0; j < colunas; j++) {
             printf("%s ", matriz[i][j]);
             if (strcmp(matriz[i][j], "0") == 0) {
