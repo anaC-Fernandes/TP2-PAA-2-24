@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "Labirinto.h"
+#include "Movimento.h"
 
 //main de teste
 /*int main(){
@@ -39,7 +39,6 @@
 // main final
 int main(int argc, char *argv[]) {
     if (argc != 2) {
-        printf("%d\n", argc);
         printf("Digitar somente o caminho e o nome do arquivo de entrada\n");
         return 1;
     }
