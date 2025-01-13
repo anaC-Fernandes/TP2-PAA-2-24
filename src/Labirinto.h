@@ -32,7 +32,6 @@ labirinto Alocar_Labirinto(int linhas, int colunas);
 void Destrutor_Labirinto(labirinto tabuleiro, int linhas);
 void Imprimir_Labirinto(labirinto tabuleiro, int linhas, int colunas);
 labirinto Processar_Arquivo(FILE* arquivo, int linhas, int colunas,  estudante *cdc, cave_infos *infos);
-void get_infos(FILE* arquivo, int* linhas, int* colunas, int* pts_vida);
+void Get_infos(FILE* arquivo, int* linhas, int* colunas, int* pts_vida);
 void Criar_Estudante(int vida, estudante *cdc);
-void movimenta_estudante(const labirinto cave, estudante *cdc, cave_infos infos);
-bool problema_valido(cave_infos infos, estudante cdc);
+

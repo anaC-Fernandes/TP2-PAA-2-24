@@ -1,10 +1,4 @@
 /home/gabrielbd/.cache/JetBrains/RemoteDev/dist/5dc3f598cfaa5_CLion-243.21565.198/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/gabrielbd/.cache/JetBrains/RemoteDev/dist/5dc3f598cfaa5_CLion-243.21565.198/bin/ninja/linux/x64/ninja -G Ninja -S /home/gabrielbd/Codes/TP2-PAA-2-24 -B /home/gabrielbd/Codes/TP2-PAA-2-24/cmake-build-debug
--- The C compiler identification is GNU 11.4.0
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - done
--- Check for working C compiler: /usr/bin/cc - skipped
--- Detecting C compile features
--- Detecting C compile features - done
--- Configuring done (1.7s)
+-- Configuring done (0.0s)
 -- Generating done (0.0s)
 -- Build files have been written to: /home/gabrielbd/Codes/TP2-PAA-2-24/cmake-build-debug

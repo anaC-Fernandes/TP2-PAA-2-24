@@ -5,4 +5,6 @@ set(CMAKE_C_STANDARD 11)
 
 add_executable(TP2_PAA_2_24 src/main.c
         src/Labirinto.c
-        src/Labirinto.h)
+        src/Labirinto.h
+        src/Movimento.c
+        src/Movimento.h)
