@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAX 100
+#define MAX 1000
 
 int matriz[MAX][MAX];
 int linhas, colunas;
@@ -97,5 +97,61 @@ int main() {
     linhas = 5;
     colunas = 5;
     gerarCaverna("../lib/caverna_aleatoria.txt", linhas, colunas, 50);
+    
+    
+    int x = 0;
+    int y = 0;
+    FILE *fp = NULL;
+    FILE *gnupipe = NULL;
+    char *GnuCommands [] = {"set title \"Grafico tempo x entrada\"", "plot 'data.tmp'"};
+    clock_t comeco, fim;
+
+    fp = fopen("data.tmp", "w");
+    gnupipe = _popen("gnuplot -persist", "w");
+
+    comeco = clock();
+    gerarCaverna("../lib/caverna_aleatoria1.txt", 10, 10, 50);
+    fim = clock();
+    fprintf(fp, "%d %d\n", 1, (fim - comeco)/ CLOCKS_PER_SEC);
+    printf("Diferenca: %d\n", (fim - comeco)/ CLOCKS_PER_SEC);
+
+    comeco = clock();
+    gerarCaverna("../lib/caverna_aleatoria2.txt", 100, 100, 50);
+    fim = clock();
+    fprintf(fp, "%d %d\n", 2, (fim - comeco)/ CLOCKS_PER_SEC);
+    printf("Diferenca: %d\n", (fim - comeco)/ CLOCKS_PER_SEC);
+
+    comeco = clock();
+    gerarCaverna("../lib/caverna_aleatoria3.txt", 200, 100, 500);
+    fim = clock();
+    fprintf(fp, "%d %d\n", 3, (fim - comeco)/ CLOCKS_PER_SEC);
+    printf("Diferenca: %d\n", (fim - comeco)/ CLOCKS_PER_SEC);
+
+    comeco = clock();
+    gerarCaverna("../lib/caverna_aleatoria4.txt", 500, 500, 500);
+    fim = clock();
+    fprintf(fp, "%d %d\n", 4, (fim - comeco)/ CLOCKS_PER_SEC);
+    printf("Diferenca: %d\n", (fim - comeco)/ CLOCKS_PER_SEC);
+
+    comeco = clock();
+    
+    /*for (int i=0; i<500000; i++){
+        //fprintf(fp, "%d %d\n", x, y);
+        printf("%d\n", i);
+        x = x+1;
+        y = x*x;
+        
+    }*/
+    gerarCaverna("../lib/caverna_aleatoria5.txt", 999, 999, 5000);
+    fim = clock();
+    fprintf(fp, "%d %d\n", 5, (fim - comeco)/ CLOCKS_PER_SEC);
+    printf("Diferenca: %d\n", (fim - comeco)/ CLOCKS_PER_SEC);
+
+    for (int i=0; i<2; i++){
+        fprintf(gnupipe, "%s\n", GnuCommands[i]);
+    }
+
+    return 0;
+    
     return 0;
 }
