@@ -1,74 +1,52 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #include "Movimento.h"
 
-//main de teste
-/*int main(){
-    estudante cdc;
-    cave_infos infos;
-    char buffer[128];
-    //printf("Digite o caminho do arquivo: ");
-    //scanf("%s", buffer);
-    strcpy(buffer, "/home/gabrielbd/Codes/TP2-PAA-2-24/lib/teste.txt");
-    FILE* arquivo = fopen(buffer,"r");
-    int linhas = 0, colunas = 0, pts_vida = 0;
-    get_infos(arquivo, &linhas, &colunas, &pts_vida);
-    infos.ordem[0] = linhas - 1;
-    infos.ordem[1] = colunas - 1;
-    
-
-
-    labirinto tabuleiro = Processar_Arquivo(arquivo,linhas,colunas, &cdc, &infos);
-    Criar_Estudante(pts_vida, &cdc);
-    if (problema_valido(infos, cdc)) {
-        movimenta_estudante(tabuleiro, &cdc, infos);
-    }
-
-    
-    // Use the 'tabuleiro' variable to avoid unused variable warning
-    // For example, you can print or process it
-    
-    printf("------------------//------------------\n");
-    Imprimir_Labirinto(tabuleiro, linhas, colunas);
-    Destrutor_Labirinto(tabuleiro, linhas);
-    fclose(arquivo);
-    return 0;
-}*/
-
-
-// main final
 int main(int argc, char *argv[]) {
     if (argc != 2) {
-        printf("Digitar somente o caminho e o nome do arquivo de entrada\n");
+        printf("Digitar somente caminho\nome_arquivo.txt\n");
         return 1;
     }
     printf("Arquivo de entrada: %s\n", argv[1]);
 
-    
+    // Início da medição do tempo
+    clock_t inicio, fim;
+    double tempo_execucao;
+    inicio = clock();
+
     estudante cdc;
     cave_infos infos;
     char buffer[128];
-    
+
     strcpy(buffer, argv[1]);
-    FILE* arquivo = fopen(buffer,"r");
-    int linhas = 0, colunas = 0, pts_vida = 0;
-    get_infos(arquivo, &linhas, &colunas, &pts_vida);
-    infos.ordem[0] = linhas - 1;
-    infos.ordem[1] = colunas - 1;
-    
-
-
-    labirinto tabuleiro = Processar_Arquivo(arquivo,linhas,colunas, &cdc, &infos);
-    Criar_Estudante(pts_vida, &cdc);
-    if (problema_valido(infos, cdc)) {
-        movimenta_estudante(tabuleiro, &cdc, infos);
+    FILE* arquivo = fopen(buffer, "r");
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return 1;
     }
 
-    
+    int linhas = 0, colunas = 0, pts_vida = 0;
+    Get_infos(arquivo, &linhas, &colunas, &pts_vida);
+    infos.ordem[0] = linhas - 1;
+    infos.ordem[1] = colunas - 1;
+
+    labirinto tabuleiro = Processar_Arquivo(arquivo, linhas, colunas, &cdc, &infos);
+    Criar_Estudante(pts_vida, &cdc);
+    if (Problema_valido(infos, cdc)) {
+        Movimenta_estudante(tabuleiro, &cdc, infos);
+    }
 
     printf("------------------//------------------\n");
     Imprimir_Labirinto(tabuleiro, linhas, colunas);
     Destrutor_Labirinto(tabuleiro, linhas);
     fclose(arquivo);
+
+    // Fim da medição do tempo
+    fim = clock();
+    tempo_execucao = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+
+    printf("Tempo de execução: %.6f segundos\n", tempo_execucao);
     return 0;
 }

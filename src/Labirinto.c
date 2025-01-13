@@ -6,7 +6,7 @@
 
 #define TAM_BUFFER 32
 
-void get_infos(FILE* arquivo, int* linhas, int* colunas, int* pts_vida) {
+void Get_infos(FILE* arquivo, int* linhas, int* colunas, int* pts_vida) {
     fscanf(arquivo, "%d %d %d", linhas, colunas, pts_vida);
 }
 

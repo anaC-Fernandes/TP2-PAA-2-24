@@ -1,6 +1,6 @@
 #include "Movimento.h"
 
-bool cima_valido(int proximaLinha, cave_infos infos) {
+bool Vertical_valido(int proximaLinha, cave_infos infos) {
     //Verificar se a linha do próximo movimento está dentro do limite da matriz
     if(proximaLinha > infos.ordem[0] )return false;
     if(proximaLinha < 0 ) return false;
@@ -9,7 +9,7 @@ bool cima_valido(int proximaLinha, cave_infos infos) {
     return true;
 }
 
-bool esq_valido(int proximaColuna, cave_infos infos) {
+bool Horizontal_valido(int proximaColuna, cave_infos infos) {
     //Verificar se a coluna do próximo movimento está dentro do limite da matriz
     if(proximaColuna > infos.ordem[1]) return false;
     if(proximaColuna < 0) return false;
@@ -19,9 +19,10 @@ bool esq_valido(int proximaColuna, cave_infos infos) {
 }
 
 void NextisEndPoint(labirinto cave, estudante *cdc, cave_infos infos, bool isDead) {
+    //Função responsável por verificar se o estudante chegou ao ponto final
     if(isDead) return;
-    bool cima = cima_valido(cdc->linha - 1, infos);
-    bool esq = esq_valido(cdc->coluna - 1, infos);
+    bool cima = Vertical_valido(cdc->linha - 1, infos);
+    bool esq = Horizontal_valido(cdc->coluna - 1, infos);
     if(cima == true) {
         if(cave[cdc->linha - 1][cdc->coluna].isEnd == true) {
             cdc->isAtEndPoint = true;
@@ -39,7 +40,7 @@ void NextisEndPoint(labirinto cave, estudante *cdc, cave_infos infos, bool isDea
         }
     }
 }
-void escritaArquivo(estudante cdc, bool isDead) {
+void EscritaArquivo(estudante cdc, bool isDead) {
     FILE *arquivo;
     if (isDead == false) {
          arquivo = fopen("resultado.txt", "a");
@@ -60,7 +61,7 @@ void escritaArquivo(estudante cdc, bool isDead) {
     fclose(arquivo);
 }
 
-void primeiraEscrita(estudante cdc) {
+void PrimeiraEscrita(estudante cdc) { //Função responsável por fazer a escrita no arquivo em que o estudante está
     FILE *arquivo = fopen("resultado.txt", "w");
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo\n");
@@ -70,8 +71,8 @@ void primeiraEscrita(estudante cdc) {
     fclose(arquivo);
 }
 
-int calcular_adj(caverna *cv, labirinto cave, int linhaAtualCelula, int colunaAtualCelula, cave_infos infos, estudante *cdc) { // a matriz completa está sendo passada em
-
+int Calcular_adj(caverna *cv, labirinto cave, int linhaAtualCelula, int colunaAtualCelula, cave_infos infos, estudante *cdc) { // a matriz completa está sendo passada em
+    //Função responsável por calcular, ou recurperar, recursivamente o valor que será adicionado a vida do estudante caso ele visite a celula
     if(cv->isStudent == true || cdc->isAtEndPoint == true ) {
         return 0;
     }
@@ -81,13 +82,13 @@ int calcular_adj(caverna *cv, labirinto cave, int linhaAtualCelula, int colunaAt
     }
 
     int valorBaixo = 0, valorDir = 0;
-    bool dir = esq_valido(colunaAtualCelula + 1, infos);
-    bool baixo = cima_valido(linhaAtualCelula + 1, infos);
+    bool dir = Horizontal_valido(colunaAtualCelula + 1, infos);
+    bool baixo = Vertical_valido(linhaAtualCelula + 1, infos);
     if(dir == true) {
-        valorDir = calcular_adj(&cave[linhaAtualCelula][colunaAtualCelula + 1], cave, linhaAtualCelula, colunaAtualCelula + 1, infos, cdc);
+        valorDir = Calcular_adj(&cave[linhaAtualCelula][colunaAtualCelula + 1], cave, linhaAtualCelula, colunaAtualCelula + 1, infos, cdc);
     }
     if(baixo == true) {
-        valorBaixo = calcular_adj(&cave[linhaAtualCelula + 1][colunaAtualCelula], cave, linhaAtualCelula + 1, colunaAtualCelula, infos, cdc);
+        valorBaixo = Calcular_adj(&cave[linhaAtualCelula + 1][colunaAtualCelula], cave, linhaAtualCelula + 1, colunaAtualCelula, infos, cdc);
     }
     if(dir == false && baixo == true) {
         cv->wasCalculated = true;
@@ -117,58 +118,73 @@ int calcular_adj(caverna *cv, labirinto cave, int linhaAtualCelula, int colunaAt
     return 0;
 }
 
-
-
-void movimenta_estudante(const labirinto cave, estudante *cdc, cave_infos infos) { //passar a ordem da matriz
-    bool esq_permitida,cim_permitida;
-    bool isDead = false;
-    primeiraEscrita(*cdc);
-    while(cdc->isAtEndPoint != true) {
-        // testar aqui primeiro se a linha e a coluna são iguais a linha e coluna final
-
-        esq_permitida = esq_valido(cdc->coluna - 1, infos);
-        cim_permitida = cima_valido(cdc->linha - 1, infos);
-
-        if(esq_permitida == true && cim_permitida == true ) {
-            const int esq = calcular_adj(&cave[cdc->linha][cdc->coluna - 1], cave, cdc->linha, cdc->coluna - 1, infos, cdc);
-            const int cima = calcular_adj(&cave[cdc->linha - 1][cdc->coluna], cave, cdc->linha - 1, cdc->coluna, infos, cdc);
-
-            if(esq > cima){
-                cdc->coluna --; // realiza o movimento para a esquerda
-                cdc->vida += cave[cdc->linha][cdc->coluna].action;
-            } else {
-                cdc->linha --; // realiza o movimento para cima
-                cdc->vida += cave[cdc->linha][cdc->coluna].action;
-            }
-        } else if(esq_permitida == false && cim_permitida == true) {
-            cdc->linha --;
-            cdc->vida += cave[cdc->linha][cdc->coluna].action;
-        } else if(esq_permitida == true && cim_permitida == false) {
-            cdc->coluna --;
-            cdc->vida += cave[cdc->linha][cdc->coluna].action;
-        } else if(cim_permitida == false && esq_permitida == false) {
-            isDead = true;
-            break;
-        }
-        escritaArquivo(*cdc, isDead);
-
-        if(cdc->vida <= 0) {
-            printf("Estudante morreu\n");
-            isDead = true;
-            break;
-        }
-        NextisEndPoint(cave, cdc, infos, isDead);
-    }
-
-    if(cdc->isAtEndPoint == true) {
-        escritaArquivo(*cdc, isDead);
-    } else {
-        escritaArquivo(*cdc, isDead);
-    }
+void Atualiza_posicao(estudante *cdc, int novaLinha, int novaColuna, labirinto cave) {
+    cdc->linha = novaLinha;
+    cdc->coluna = novaColuna;
+    cdc->vida += cave[novaLinha][novaColuna].action;
 }
-bool problema_valido(cave_infos infos, estudante cdc) {
+
+
+void Movimenta_estudante(const labirinto cave, estudante *cdc, cave_infos infos) {
+    bool esq_permitida, cim_permitida;
+    bool isDead = false;
+
+    // Escreve a posição inicial no arquivo
+    PrimeiraEscrita(*cdc);
+
+    while (!cdc->isAtEndPoint) {
+        // Verifica se os movimentos para cima e para a esquerda são permitidos
+        esq_permitida = Horizontal_valido(cdc->coluna - 1, infos);
+        cim_permitida = Vertical_valido(cdc->linha - 1, infos);
+
+        // Se pelo menos um movimento for permitido
+        if (esq_permitida || cim_permitida) {
+            int proxLinha = cdc->linha, proxColuna = cdc->coluna;
+
+            // Se ambos os movimentos forem permitidos, escolhe o melhor
+            if (esq_permitida && cim_permitida) {
+                int pesoEsq = Calcular_adj(&cave[cdc->linha][cdc->coluna - 1], cave, cdc->linha, cdc->coluna - 1, infos, cdc);
+                int pesoCima = Calcular_adj(&cave[cdc->linha - 1][cdc->coluna], cave, cdc->linha - 1, cdc->coluna, infos, cdc);
+
+                if (pesoEsq > pesoCima) {
+                    proxColuna--; // Move para a esquerda
+                } else {
+                    proxLinha--; // Move para cima
+                }
+            } else if (esq_permitida) {
+                proxColuna--; // Move apenas para a esquerda
+            } else {
+                proxLinha--; // Move apenas para cima
+            }
+
+            // Atualiza a posição do estudante e os pontos de vida
+            Atualiza_posicao(cdc, proxLinha, proxColuna, cave);
+            EscritaArquivo(*cdc, isDead);
+
+            // Verifica se o estudante morreu
+            if (cdc->vida <= 0) {
+                printf("Estudante morreu\n");
+                isDead = true;
+                break;
+            }
+
+            // Verifica se o estudante chegou ao ponto final
+            NextisEndPoint(cave, cdc, infos, isDead);
+
+        } else {
+            // Nenhum movimento é permitido, estudante não pode continuar
+            isDead = true;
+            break;
+        }
+    }
+
+    // Escrita final dependendo do estado do estudante
+    EscritaArquivo(*cdc, isDead);
+}
+
+bool Problema_valido(cave_infos infos, estudante cdc) {
     if (infos.coluna_fim > cdc.coluna && infos.linhaFim > cdc.linha) {
-        escritaArquivo(cdc, true);
+        EscritaArquivo(cdc, true);
         return false;
     }else {
         return true;
