@@ -40,7 +40,7 @@ void NextisEndPoint(labirinto cave, estudante *cdc, cave_infos infos, bool isDea
         }
     }
 }
-void EscritaArquivo(estudante cdc, bool isDead) {
+void EscritaArquivo(estudante cdc, bool isDead) { // Função responsável por escrever no arquivo a posição do estudante ou se ele morreu
     FILE *arquivo;
     if (isDead == false) {
          arquivo = fopen("resultado.txt", "a");
@@ -61,7 +61,7 @@ void EscritaArquivo(estudante cdc, bool isDead) {
     fclose(arquivo);
 }
 
-void PrimeiraEscrita(estudante cdc) { //Função responsável por fazer a escrita no arquivo em que o estudante está
+void PrimeiraEscrita(estudante cdc) { //Função responsável por fazer a escrita no arquivo da posicao incial em que o estudante está
     FILE *arquivo = fopen("resultado.txt", "w");
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo\n");
@@ -182,6 +182,7 @@ void Movimenta_estudante(const labirinto cave, estudante *cdc, cave_infos infos)
     EscritaArquivo(*cdc, isDead);
 }
 
+//função responsável por verificar se o estudante pode chegar ao ponto final usando as restricoes de movimento do problema
 bool Problema_valido(cave_infos infos, estudante cdc) {
     if (infos.coluna_fim > cdc.coluna && infos.linhaFim > cdc.linha) {
         EscritaArquivo(cdc, true);

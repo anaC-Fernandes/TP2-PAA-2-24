@@ -6,16 +6,9 @@
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
-        printf("Digitar somente caminho\nome_arquivo.txt\n");
+        printf("Digitar somente caminho \\nome_arquivo.txt\n");
         return 1;
     }
-    printf("Arquivo de entrada: %s\n", argv[1]);
-
-    // Início da medição do tempo
-    clock_t inicio, fim;
-    double tempo_execucao;
-    inicio = clock();
-
     estudante cdc;
     cave_infos infos;
     char buffer[128];
@@ -38,15 +31,9 @@ int main(int argc, char *argv[]) {
         Movimenta_estudante(tabuleiro, &cdc, infos);
     }
 
-    printf("------------------//------------------\n");
-    Imprimir_Labirinto(tabuleiro, linhas, colunas);
     Destrutor_Labirinto(tabuleiro, linhas);
     fclose(arquivo);
 
-    // Fim da medição do tempo
-    fim = clock();
-    tempo_execucao = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
-
-    printf("Tempo de execução: %.6f segundos\n", tempo_execucao);
+    
     return 0;
 }
