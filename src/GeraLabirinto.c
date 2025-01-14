@@ -7,6 +7,8 @@
 int matriz[MAX][MAX];
 int linhas, colunas;
 
+int valoresPermitidos[] = {-20, -10, 0, 20};
+
 int dfs(int x, int y, int soma) {
     if (x < 0 || y < 0 || x >= linhas || y >= colunas || matriz[x][y] == -999) {
         return 0;
@@ -68,7 +70,7 @@ void gerarCaverna(char *filename, int linhas, int colunas, int pontos_vida) {
             } else if (i == posI_x && j == posI_y) {
                 matriz[i][j] = 'I';
             } else {
-                matriz[i][j] = (rand() % 41) - 20; // Valores entre -20 e +20
+                matriz[i][j] = valoresPermitidos[rand() % 4]; // Apenas -20, -10, 0, 20
             }
         }
     }
